@@ -1,0 +1,94 @@
+name: CI Helper
+
+on:
+  workflow_call:
+    inputs:
+      os-name:
+        description: "The OS to run the workflow on."
+        required: true
+        type: string
+    secrets:
+      REPO_AUTH_TOKEN:
+        description: "The GitHub repo auth token."
+        required: true
+      CANTCACHE_ME_SECRET_KEY:
+        description: "The signing key for cantcache.me."
+        required: true
+      R2_ENDPOINT:
+        description: "The R2 endpoint to use."
+        required: true
+      R2_ACCESS_KEY_ID:
+        description: "The R2 access key ID to use."
+        required: true
+      R2_SECRET_ACCESS_KEY:
+        description: "The R2 secret access key to use."
+        required: true
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+
+jobs:
+  develop:
+    runs-on: ${{ inputs.os-name }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up nix
+        uses: ./.github/actions/setup
+        with:
+          REPO_AUTH_TOKEN: ${{ secrets.REPO_AUTH_TOKEN }}
+          CANTCACHE_ME_SECRET_KEY: ${{ secrets.CANTCACHE_ME_SECRET_KEY }}
+      - name: Build development environment
+        run: nix develop --print-build-logs --accept-flake-config --profile dev-profile
+      - name: Cache development environment
+        run: |
+          nix --accept-flake-config --verbose copy ./dev-profile \
+          --to "s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}"
+
+  build-docs:
+    needs: develop
+    runs-on: ${{ inputs.os-name }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      # Setup
+      - uses: actions/checkout@v3
+      - name: Set up nix
+        uses: ./.github/actions/setup
+        with:
+          REPO_AUTH_TOKEN: ${{ secrets.REPO_AUTH_TOKEN }}
+          CANTCACHE_ME_SECRET_KEY: ${{ secrets.CANTCACHE_ME_SECRET_KEY }}
+      - name: Set repeat commands as environment variables
+        run: |
+          echo "NIX_BUILD_CMD=nix build \
+          --print-build-logs \
+          --accept-flake-config" >> $GITHUB_ENV
+          
+          echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
+          --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
+
+      # Build
+      - name: Build leanInk
+        run: $NIX_BUILD_CMD .#leanInk
+      - name: Cache leanInk
+        run: $NIX_CACHE_CMD .#leanInk
+      - name: Build alectryon
+        run: $NIX_BUILD_CMD .#alectryon
+      - name: Cache alectryon
+        run: $NIX_CACHE_CMD .#alectryon
+      - name: Build lean-mdbook
+        run: $NIX_BUILD_CMD .#lean-mdbook
+      - name: Cache lean-mdbook
+        run: $NIX_CACHE_CMD .#lean-mdbook
+      - name: Build generated-lean-markdown
+        run: $NIX_BUILD_CMD .#generated-lean-markdown
+      - name: Cache generated-lean-markdown
+        run: $NIX_CACHE_CMD .#generated-lean-markdown
+      - name: Build docs
+        run: $NIX_BUILD_CMD .#docs
+      - name: Cache docs
+        run: $NIX_CACHE_CMD .#docs

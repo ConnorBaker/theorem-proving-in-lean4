@@ -1,0 +1,34 @@
+name: Setup
+description: "Setup the GitHub Actions environment."
+
+inputs:
+  REPO_AUTH_TOKEN:
+    description: "The GitHub repository authentication token."
+    required: true
+  CANTCACHE_ME_SECRET_KEY:
+    description: "The signing key for cantcache.me."
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Set up signing key for cantcache.me
+      shell: bash
+      run: echo ${{ inputs.CANTCACHE_ME_SECRET_KEY }} > ${{ runner.temp }}/cantcache_me_secret_key
+    - uses: cachix/install-nix-action@v17
+      with:
+        # The action automatically adds max-jobs and experimental-features,
+        # but we choose to keep them for those looking for an easy configuration
+        # to copy-paste from.
+        # Note that the action also adds trusted-users so we can access the binary
+        # cache.
+        extra_nix_config: |
+          access-tokens = github.com=${{ inputs.REPO_AUTH_TOKEN }}
+          experimental-features = nix-command flakes
+          max-jobs = auto
+          http-connections = 0
+          substitute = true
+          fallback = true
+          keep-outputs = true
+          keep-derivations = true
+          secret-key-files = ${{ runner.temp }}/cantcache_me_secret_key

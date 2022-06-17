@@ -91,7 +91,7 @@
             paths = outputs;
           };
 
-        doc = stdenv.mkDerivation {
+        docs = stdenv.mkDerivation {
             name = "lean-doc";
             src = doc-src;
             buildInputs = [lean-mdbook];
@@ -110,8 +110,8 @@
 
       in {
         packages = {
-          inherit leanInk alectryon lean-mdbook generated-lean-markdown doc;
-          default = doc;
+          inherit leanInk alectryon lean-mdbook generated-lean-markdown docs;
+          default = docs;
         };
 
         devShells.default = mkShell {
