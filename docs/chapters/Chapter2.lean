@@ -160,8 +160,8 @@ namespace Foo
   #check Foo.fa
 end Foo
 
-#check a  -- error
-#check f  -- error
+-- #check a  -- error
+-- #check f  -- error
 #check Foo.a
 #check Foo.f
 #check Foo.fa

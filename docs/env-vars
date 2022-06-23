@@ -14,7 +14,7 @@ declare -x NIX_BUILD_CORES="10"
 declare -x NIX_BUILD_TOP="/private/tmp/nix-build-lean-doc.drv-0"
 declare -x NIX_CC="/nix/store/630b4hj9z3gj62c4fw3q7sxy1akql5l4-clang-wrapper-11.1.0"
 declare -x NIX_CC_WRAPPER_TARGET_HOST_aarch64_apple_darwin="1"
-declare -x NIX_CFLAGS_COMPILE=" -frandom-seed=6yhyn7kk63 -isystem /nix/store/iqywfqxdgnb1mrc9kl6xc654xshxkyvc-libcxx-11.1.0-dev/include -isystem /nix/store/3q72n32dpglbcphc6877nvd2762ig784-libcxxabi-11.1.0-dev/include -iframework /nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks -isystem /nix/store/isp9fyx2cijss6a08bzhafvhgi6jhqd0-libobjc-11.0.0/include -isystem /nix/store/iqywfqxdgnb1mrc9kl6xc654xshxkyvc-libcxx-11.1.0-dev/include -isystem /nix/store/3q72n32dpglbcphc6877nvd2762ig784-libcxxabi-11.1.0-dev/include -iframework /nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks -isystem /nix/store/isp9fyx2cijss6a08bzhafvhgi6jhqd0-libobjc-11.0.0/include"
+declare -x NIX_CFLAGS_COMPILE=" -frandom-seed=yvy40kvi79 -isystem /nix/store/iqywfqxdgnb1mrc9kl6xc654xshxkyvc-libcxx-11.1.0-dev/include -isystem /nix/store/3q72n32dpglbcphc6877nvd2762ig784-libcxxabi-11.1.0-dev/include -iframework /nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks -isystem /nix/store/isp9fyx2cijss6a08bzhafvhgi6jhqd0-libobjc-11.0.0/include -isystem /nix/store/iqywfqxdgnb1mrc9kl6xc654xshxkyvc-libcxx-11.1.0-dev/include -isystem /nix/store/3q72n32dpglbcphc6877nvd2762ig784-libcxxabi-11.1.0-dev/include -iframework /nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks -isystem /nix/store/isp9fyx2cijss6a08bzhafvhgi6jhqd0-libobjc-11.0.0/include"
 declare -x NIX_COREFOUNDATION_RPATH="/nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks"
 declare -x NIX_DONT_SET_RPATH="1"
 declare -x NIX_DONT_SET_RPATH_FOR_BUILD="1"
@@ -57,10 +57,12 @@ declare -x buildCommand="mkdir \$out
 # necessary for \`additional-css\`...?
 cp -r --no-preserve=mode \$src/* .
 # overwrite stub .lean.md files
-cp -r /nix/store/a29v0yfip7mir60zpn4aw999wkx3795c-doc/* .
-# test the fragments
-mdbook test
+cp -r /nix/store/24rmbl93jcpx8pcs8c3n70z983kwn6m6-doc/* .
 # build the book
+# NOTE: By this point, if we're using LeanInk/alectryon, the input
+# will have had all Lean code stripped and replaced with HTML.
+# As such, if you want to check that the Lean code is valid, make
+# sure to do so in the generated-lean-markdown derivation.
 mdbook build -d \$out
 "
 declare -x buildInputs="/nix/store/adn0rz08qgav9hxahnkbdv1nb1b4aw98-lean-mdbook-0.4.17"
@@ -78,13 +80,13 @@ declare -x doCheck=""
 declare -x doInstallCheck=""
 declare -x name="lean-doc"
 declare -x nativeBuildInputs=""
-declare -x out="/nix/store/6yhyn7kk637srms8839xjwxy0h74vq0j-lean-doc"
+declare -x out="/nix/store/yvy40kvi79ha11iah4bbx74mv5mq5vk3-lean-doc"
 declare -x outputs="out"
 declare -x patches=""
 declare -x propagatedBuildInputs=""
 declare -x propagatedNativeBuildInputs=""
 declare -x shell="/nix/store/lkw407y1x1v5bg6hc290c5ry1qaabbgl-bash-5.1-p16/bin/bash"
-declare -x src="/nix/store/5w13rypm624nlm5l1j000wkd162wfw83-doc-src"
+declare -x src="/nix/store/hnffzcgggk8jvh3l2qzpfwmya28g5vmr-doc-src"
 declare -x stdenv="/nix/store/3zqj93rzxlff2945pn58wwdd6g5v655q-stdenv-darwin"
 declare -x strictDeps=""
 declare -x system="aarch64-darwin"
