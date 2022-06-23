@@ -1,0 +1,44 @@
+name: Deploy Docs
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+on:
+  workflow_call:
+    inputs:
+      os-name:
+        description: "The OS to run the workflow on."
+        required: true
+        type: string
+    secrets:
+      REPO_AUTH_TOKEN:
+        description: "The GitHub repo auth token."
+        required: true
+
+jobs:
+  deploy-docs:
+    runs-on: ${{ inputs.os-name }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+      - name: Listdir
+        run: ls -R
+      - name: Extract downloaded artifact
+        run: zstd -d gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst -o gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}.tar
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}
+          path: gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}.tar
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+        with:
+          emit_telemetry: false
+          token: ${{ secrets.REPO_AUTH_TOKEN }}

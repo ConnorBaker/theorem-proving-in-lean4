@@ -24,6 +24,10 @@ on:
         description: "The R2 secret access key to use."
         required: true
 
+defaults:
+  run:
+    shell: bash
+
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -31,9 +35,6 @@ env:
 jobs:
   develop:
     runs-on: ${{ inputs.os-name }}
-    defaults:
-      run:
-        shell: bash
     steps:
       - uses: actions/checkout@v3
       - name: Set up nix
@@ -41,19 +42,23 @@ jobs:
         with:
           REPO_AUTH_TOKEN: ${{ secrets.REPO_AUTH_TOKEN }}
           CANTCACHE_ME_SECRET_KEY: ${{ secrets.CANTCACHE_ME_SECRET_KEY }}
-      - name: Build development environment
-        run: nix develop --print-build-logs --accept-flake-config --profile dev-profile
-      - name: Cache development environment
+      - name: Set repeat commands as environment variables
         run: |
-          nix --accept-flake-config --verbose copy ./dev-profile \
-          --to "s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}"
+          echo "NIX_DEV_CMD=nix develop \
+          --print-build-logs \
+          --accept-flake-config \
+          --profile dev-profile" >> $GITHUB_ENV
+
+          echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
+          --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
+      - name: Build development environment
+        run: $NIX_DEV_CMD
+      - name: Cache development environment outputs
+        run: $NIX_CACHE_CMD
 
   build-docs:
     needs: develop
     runs-on: ${{ inputs.os-name }}
-    defaults:
-      run:
-        shell: bash
     steps:
       # Setup
       - uses: actions/checkout@v3
@@ -72,23 +77,22 @@ jobs:
           --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
 
       # Build
-      - name: Build leanInk
-        run: $NIX_BUILD_CMD .#leanInk
-      - name: Cache leanInk
-        run: $NIX_CACHE_CMD .#leanInk
-      - name: Build alectryon
-        run: $NIX_BUILD_CMD .#alectryon
-      - name: Cache alectryon
-        run: $NIX_CACHE_CMD .#alectryon
-      - name: Build lean-mdbook
-        run: $NIX_BUILD_CMD .#lean-mdbook
-      - name: Cache lean-mdbook
-        run: $NIX_CACHE_CMD .#lean-mdbook
-      - name: Build generated-lean-markdown
-        run: $NIX_BUILD_CMD .#generated-lean-markdown
-      - name: Cache generated-lean-markdown
-        run: $NIX_CACHE_CMD .#generated-lean-markdown
+      - name: Build outputs
+        run: $NIX_BUILD_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown}
+      - name: Cache outputs
+        run: $NIX_CACHE_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown}
       - name: Build docs
         run: $NIX_BUILD_CMD .#docs
       - name: Cache docs
         run: $NIX_CACHE_CMD .#docs
+
+      # Upload docs
+      - name: Create archive
+        run: tar -vv --create --auto-compress --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst  --directory result .
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+          path: gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
+        
