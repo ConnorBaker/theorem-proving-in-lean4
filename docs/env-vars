@@ -14,7 +14,7 @@ declare -x NIX_BUILD_CORES="10"
 declare -x NIX_BUILD_TOP="/private/tmp/nix-build-lean-doc.drv-0"
 declare -x NIX_CC="/nix/store/630b4hj9z3gj62c4fw3q7sxy1akql5l4-clang-wrapper-11.1.0"
 declare -x NIX_CC_WRAPPER_TARGET_HOST_aarch64_apple_darwin="1"
-declare -x NIX_CFLAGS_COMPILE=" -frandom-seed=d1wf7n8irx -isystem /nix/store/iqywfqxdgnb1mrc9kl6xc654xshxkyvc-libcxx-11.1.0-dev/include -isystem /nix/store/3q72n32dpglbcphc6877nvd2762ig784-libcxxabi-11.1.0-dev/include -iframework /nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks -isystem /nix/store/isp9fyx2cijss6a08bzhafvhgi6jhqd0-libobjc-11.0.0/include -isystem /nix/store/iqywfqxdgnb1mrc9kl6xc654xshxkyvc-libcxx-11.1.0-dev/include -isystem /nix/store/3q72n32dpglbcphc6877nvd2762ig784-libcxxabi-11.1.0-dev/include -iframework /nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks -isystem /nix/store/isp9fyx2cijss6a08bzhafvhgi6jhqd0-libobjc-11.0.0/include"
+declare -x NIX_CFLAGS_COMPILE=" -frandom-seed=h93jh5b0l6 -isystem /nix/store/iqywfqxdgnb1mrc9kl6xc654xshxkyvc-libcxx-11.1.0-dev/include -isystem /nix/store/3q72n32dpglbcphc6877nvd2762ig784-libcxxabi-11.1.0-dev/include -iframework /nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks -isystem /nix/store/isp9fyx2cijss6a08bzhafvhgi6jhqd0-libobjc-11.0.0/include -isystem /nix/store/iqywfqxdgnb1mrc9kl6xc654xshxkyvc-libcxx-11.1.0-dev/include -isystem /nix/store/3q72n32dpglbcphc6877nvd2762ig784-libcxxabi-11.1.0-dev/include -iframework /nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks -isystem /nix/store/isp9fyx2cijss6a08bzhafvhgi6jhqd0-libobjc-11.0.0/include"
 declare -x NIX_COREFOUNDATION_RPATH="/nix/store/7hvwkm22phjfiw65z8fhs9yzwaggc019-apple-framework-CoreFoundation-11.0.0/Library/Frameworks"
 declare -x NIX_DONT_SET_RPATH="1"
 declare -x NIX_DONT_SET_RPATH_FOR_BUILD="1"
@@ -57,7 +57,7 @@ declare -x buildCommand="mkdir \$out
 # necessary for \`additional-css\`...?
 cp -r --no-preserve=mode \$src/* .
 # overwrite stub .lean.md files
-cp -r /nix/store/24rmbl93jcpx8pcs8c3n70z983kwn6m6-doc/* .
+cp -r /nix/store/qnbl9fxjzcav9wihib0qvv1f7jixxha6-doc/* .
 # build the book
 # NOTE: By this point, if we're using LeanInk/alectryon, the input
 # will have had all Lean code stripped and replaced with HTML.
@@ -80,7 +80,7 @@ declare -x doCheck=""
 declare -x doInstallCheck=""
 declare -x name="lean-doc"
 declare -x nativeBuildInputs=""
-declare -x out="/nix/store/d1wf7n8irxwy4ysgd41b9kl5v7ccw8fk-lean-doc"
+declare -x out="/nix/store/h93jh5b0l6pccw9x399y0fgx9m23dd1s-lean-doc"
 declare -x outputs="out"
 declare -x patches=""
 declare -x propagatedBuildInputs=""

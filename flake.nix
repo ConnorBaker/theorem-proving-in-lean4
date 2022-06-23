@@ -100,9 +100,11 @@
                 exit 1
               fi
               echo "Successfully typechecked $file"
-              alectryon --frontend lean4+markup ${inputs}/$file \
-                --backend webpage --html-minification --html-dialect html5 \
-                --output $out/$file.md
+              # Don't use --html-minification or --html-dialect html5 because
+              # they insert quoted character literals after `#check`
+              # statements for some reason.
+              alectryon --frontend lean4+markup --backend webpage \
+                ${inputs}/$file --output $out/$file.md
             done
           '';
         in
