@@ -5,3 +5,4 @@
 # Chapters
 
 - [Dependent Type Theory](./chapters/Chapter2.lean.md)
+- [Propositions and Proofs](./chapters/Chapter3.lean.md)
