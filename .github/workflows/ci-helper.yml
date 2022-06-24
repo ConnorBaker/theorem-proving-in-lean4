@@ -1,5 +1,10 @@
 name: CI Helper
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 on:
   workflow_call:
     inputs:
@@ -104,5 +109,5 @@ jobs:
         uses: actions/deploy-pages@v1
         with:
           emit_telemetry: false
-          token: ${{ secrets.REPO_AUTH_TOKEN }}
+          # token: ${{ secrets.REPO_AUTH_TOKEN }}
         
