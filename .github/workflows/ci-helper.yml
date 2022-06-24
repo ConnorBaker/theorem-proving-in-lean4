@@ -64,9 +64,6 @@ jobs:
   build:
     needs: develop
     runs-on: ${{ inputs.os-name }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       # Setup
       - uses: actions/checkout@v3
@@ -80,7 +77,7 @@ jobs:
           echo "NIX_BUILD_CMD=nix build \
           --print-build-logs \
           --accept-flake-config" >> $GITHUB_ENV
-          
+
           echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
           --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
 
@@ -114,5 +111,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-        with:
-          token: ${{ secrets.REPO_AUTH_TOKEN }}
+        # with:
+        #   token: ${{ secrets.REPO_AUTH_TOKEN }}
