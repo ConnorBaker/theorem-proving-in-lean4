@@ -88,7 +88,7 @@ jobs:
 
       # Upload docs
       - name: Create archive
-        run: tar -vv --create --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar  --directory result/** .
+        run: tar -vv --create --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar  --directory result .
 
       - name: Upload archive
         uses: actions/upload-artifact@v3

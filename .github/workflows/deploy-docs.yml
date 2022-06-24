@@ -27,6 +27,8 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+      - name: List directory
+        run: ls -laR
       - name: Upload archive
         uses: actions/upload-artifact@v3
         with:
