@@ -113,9 +113,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: gh-pages
-          path: gh-pages.tar
+          path: ./artifact.tar
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-        with:
-          token: ${{ secrets.REPO_AUTH_TOKEN }}
+        # with:
+        #   token: ${{ secrets.REPO_AUTH_TOKEN }}
