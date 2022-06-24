@@ -95,4 +95,8 @@ jobs:
         with:
           name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
           path: gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
         

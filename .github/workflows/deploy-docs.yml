@@ -37,6 +37,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-        with:
-          emit_telemetry: false
-          token: ${{ secrets.REPO_AUTH_TOKEN }}
+        # with:
+        #   emit_telemetry: false
+        #   token: ${{ secrets.REPO_AUTH_TOKEN }}
