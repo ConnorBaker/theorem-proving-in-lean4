@@ -38,76 +38,81 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
 
 jobs:
-  develop:
-    runs-on: ${{ inputs.os-name }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up nix
-        uses: ./.github/actions/setup
-        with:
-          REPO_AUTH_TOKEN: ${{ secrets.REPO_AUTH_TOKEN }}
-          CANTCACHE_ME_SECRET_KEY: ${{ secrets.CANTCACHE_ME_SECRET_KEY }}
-      - name: Set repeat commands as environment variables
-        run: |
-          echo "NIX_DEV_CMD=nix develop \
-          --print-build-logs \
-          --accept-flake-config \
-          --profile dev-profile" >> $GITHUB_ENV
+  # develop:
+  #   runs-on: ${{ inputs.os-name }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Set up nix
+  #       uses: ./.github/actions/setup
+  #       with:
+  #         REPO_AUTH_TOKEN: ${{ secrets.REPO_AUTH_TOKEN }}
+  #         CANTCACHE_ME_SECRET_KEY: ${{ secrets.CANTCACHE_ME_SECRET_KEY }}
+  #     - name: Set repeat commands as environment variables
+  #       run: |
+  #         echo "NIX_DEV_CMD=nix develop \
+  #         --print-build-logs \
+  #         --accept-flake-config \
+  #         --profile dev-profile" >> $GITHUB_ENV
 
-          echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
-          --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
-      - name: Build development environment
-        run: $NIX_DEV_CMD
-      - name: Cache development environment outputs
-        run: $NIX_CACHE_CMD
+  #         echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
+  #         --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
+  #     - name: Build development environment
+  #       run: $NIX_DEV_CMD
+  #     - name: Cache development environment outputs
+  #       run: $NIX_CACHE_CMD
 
-  build:
-    needs: develop
-    runs-on: ${{ inputs.os-name }}
-    steps:
-      # Setup
-      - uses: actions/checkout@v3
-      - name: Set up nix
-        uses: ./.github/actions/setup
-        with:
-          REPO_AUTH_TOKEN: ${{ secrets.REPO_AUTH_TOKEN }}
-          CANTCACHE_ME_SECRET_KEY: ${{ secrets.CANTCACHE_ME_SECRET_KEY }}
-      - name: Set repeat commands as environment variables
-        run: |
-          echo "NIX_BUILD_CMD=nix build \
-          --print-build-logs \
-          --accept-flake-config" >> $GITHUB_ENV
+  # build:
+  #   needs: develop
+  #   runs-on: ${{ inputs.os-name }}
+  #   steps:
+  #     # Setup
+  #     - uses: actions/checkout@v3
+  #     - name: Set up nix
+  #       uses: ./.github/actions/setup
+  #       with:
+  #         REPO_AUTH_TOKEN: ${{ secrets.REPO_AUTH_TOKEN }}
+  #         CANTCACHE_ME_SECRET_KEY: ${{ secrets.CANTCACHE_ME_SECRET_KEY }}
+  #     - name: Set repeat commands as environment variables
+  #       run: |
+  #         echo "NIX_BUILD_CMD=nix build \
+  #         --print-build-logs \
+  #         --accept-flake-config" >> $GITHUB_ENV
 
-          echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
-          --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
+  #         echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
+  #         --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
 
-      # Build
-      - name: Build outputs
-        run: $NIX_BUILD_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown}
-      - name: Cache outputs
-        run: $NIX_CACHE_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown}
-      - name: Build docs
-        run: $NIX_BUILD_CMD .#docs
-      - name: Cache docs
-        run: $NIX_CACHE_CMD .#docs
+  #     # Build
+  #     - name: Build outputs
+  #       run: $NIX_BUILD_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown}
+  #     - name: Cache outputs
+  #       run: $NIX_CACHE_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown}
+  #     - name: Build docs
+  #       run: $NIX_BUILD_CMD .#docs
+  #     - name: Cache docs
+  #       run: $NIX_CACHE_CMD .#docs
 
-      # Upload docs
-      - name: Create archive
-        run: tar -vv --dereference --hard-dereference --create --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar  --directory result .
+  #     # Upload docs
+  #     - name: Create archive
+  #       run: tar -vv --dereference --hard-dereference --create --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar  --directory result .
 
-      - name: Upload archive
-        uses: actions/upload-artifact@v3
-        with:
-          name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
-          path: gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar
+  #     - name: Upload archive
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+  #         path: gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    # needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: gh-pages
+          path: gh-pages.tar
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
