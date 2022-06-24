@@ -27,8 +27,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
-      - name: Listdir
-        run: ls -R
       - name: Extract downloaded artifact
         run: zstd -d gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst -o gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}.tar
       - name: Upload archive
