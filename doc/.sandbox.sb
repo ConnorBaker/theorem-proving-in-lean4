@@ -1,0 +1,2 @@
+(version 1)
+(import "sandbox-minimal.sb")
