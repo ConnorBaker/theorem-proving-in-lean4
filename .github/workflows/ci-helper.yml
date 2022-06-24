@@ -118,5 +118,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-        with:
-          token: ${{ secrets.REPO_AUTH_TOKEN }}
+        # with:
+        #   token: ${{ secrets.REPO_AUTH_TOKEN }}
