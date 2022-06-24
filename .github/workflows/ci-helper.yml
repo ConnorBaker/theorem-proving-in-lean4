@@ -88,11 +88,11 @@ jobs:
 
       # Upload docs
       - name: Create archive
-        run: tar -vv --create --auto-compress --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst  --directory result .
+        run: tar -vv --create --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst  --directory result .
 
       - name: Upload archive
         uses: actions/upload-artifact@v3
         with:
           name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
-          path: gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
+          path: gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar
         

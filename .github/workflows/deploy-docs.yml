@@ -24,16 +24,16 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
-      - name: Extract downloaded artifact
-        run: zstd -d gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst -o gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}.tar
-      - name: Upload archive
-        uses: actions/upload-artifact@v3
-        with:
-          name: gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}
-          path: gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}.tar
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+      # - name: Extract downloaded artifact
+      #   run: zstd -d gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst -o gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}.tar
+      # - name: Upload archive
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}
+      #     path: gh-pages-deployed-${{ github.sha }}-${{ inputs.os-name }}.tar
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
