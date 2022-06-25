@@ -12,6 +12,10 @@ on:
         description: "The OS to run the workflow on."
         required: true
         type: string
+    secrets:
+      REPO_AUTH_TOKEN:
+        description: "The GitHub repo auth token."
+        required: true
 
 jobs:
   deploy-docs:
@@ -30,3 +34,4 @@ jobs:
         with:
           branch: docs
           folder: docs
+          token: ${{ secrets.REPO_AUTH_TOKEN }}
