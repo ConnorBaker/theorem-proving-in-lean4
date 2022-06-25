@@ -41,6 +41,7 @@ jobs:
   develop:
     runs-on: ${{ inputs.os-name }}
     steps:
+      # Setup
       - uses: actions/checkout@v3
       - name: Set up nix
         uses: ./.github/actions/setup
@@ -56,6 +57,17 @@ jobs:
 
           echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
           --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
+      - name: Create nightly flake lock
+        if: inputs.nightly
+        run: nix --accept-flake-config --verbose flake update
+      - name: Upload nightly flake lock
+        if: inputs.nightly
+        uses: actions/upload-artifact@v3
+        with:
+          name: flake-lock-nightly-${{ github.sha }}-${{ inputs.os-name }}
+          path: flake.lock
+
+      # Build
       - name: Build development environment
         run: $NIX_DEV_CMD
       - name: Cache development environment outputs
@@ -80,6 +92,14 @@ jobs:
 
           echo "NIX_CACHE_CMD=nix --accept-flake-config --verbose copy \
           --to s3://cantcache-me?compression=zstd&endpoint=${{ secrets.R2_ENDPOINT }}" >> $GITHUB_ENV
+      - name: Download nightly flake lock
+        if: inputs.nightly
+        uses: actions/download-artifact@v3
+        with:
+          name: flake-lock-nightly-${{ github.sha }}-${{ inputs.os-name }}
+      - name: Verify that it's the nightly flake
+        if: inputs.nightly
+        run: cat flake.lock
 
       # Build
       - name: Build outputs

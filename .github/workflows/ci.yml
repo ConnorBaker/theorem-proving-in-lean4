@@ -33,6 +33,14 @@ jobs:
     with:
       os-name: ubuntu-22.04
     secrets: inherit
+  
+  ubuntu-22_04-nightly:
+    name: ubuntu-22.04-nightly
+    uses: ./.github/workflows/ci-helper.yml
+    with:
+      os-name: ubuntu-22.04
+      nightly: true
+    secrets: inherit
 
   deploy-docs:
     name: deploy-docs
