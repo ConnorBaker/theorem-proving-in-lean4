@@ -16,21 +16,14 @@ on:
 jobs:
   deploy-docs:
     runs-on: ${{ inputs.os-name }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/download-artifact@v3
         with:
           name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
-      - name: List directory
-        run: ls -laR
       - name: Extract artifact
-        run: tar -vv --extract --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
-      - name: List directory
-        run: ls -laR
+        run: tar -vv --extract --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst && rm gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+          folder: .
