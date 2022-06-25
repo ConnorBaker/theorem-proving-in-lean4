@@ -1,4 +1,4 @@
-name: CI Helper
+name: CI (Helper)
 
 on:
   workflow_call:
@@ -113,7 +113,7 @@ jobs:
         
       # Upload documentation
       - name: Create archive
-        run: tar -vv --dereference --hard-dereference --auto-compress --create --file docs-${{ github.sha }}-${{ inputs.os-name }}.tar.zst  --directory result .
+        run: tar -vv --auto-compress --create --file docs-${{ github.sha }}-${{ inputs.os-name }}.tar.zst  --directory result .
       - name: Upload archive
         uses: actions/upload-artifact@v3
         with:

@@ -1,0 +1,47 @@
+name: CI (Main)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  macos-11:
+    name: macos-11
+    uses: ./.github/workflows/ci-helper.yml
+    with:
+      os-name: macos-11
+    secrets: inherit
+
+  macos-12:
+    name: macos-12
+    uses: ./.github/workflows/ci-helper.yml
+    with:
+      os-name: macos-12
+    secrets: inherit
+
+  ubuntu-20_04:
+    name: ubuntu-20.04
+    uses: ./.github/workflows/ci-helper.yml
+    with:
+      os-name: ubuntu-20.04
+    secrets: inherit
+
+  ubuntu-22_04:
+    name: ubuntu-22.04
+    uses: ./.github/workflows/ci-helper.yml
+    with:
+      os-name: ubuntu-22.04
+    secrets: inherit
+
+  deploy-docs:
+    name: deploy-docs
+    needs:
+      - macos-11
+      - macos-12
+      - ubuntu-20_04
+      - ubuntu-22_04
+    uses: ./.github/workflows/deploy-docs.yml
+    with:
+      os-name: ubuntu-22.04
+    secrets: inherit
