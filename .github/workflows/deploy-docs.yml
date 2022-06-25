@@ -26,7 +26,7 @@ jobs:
       - name: List directory
         run: ls -laR
       - name: Extract artifact
-        run: tar --extract gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
+        run: tar -vv --extract --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
       - name: List directory
         run: ls -laR
       - name: Deploy
