@@ -17,15 +17,16 @@ jobs:
   deploy-docs:
     runs-on: ${{ inputs.os-name }}
     steps:
+      - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
         with:
-          name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+          name: docs-${{ github.sha }}-${{ inputs.os-name }}
       - name: Extract artifact
         run: |
           mkdir docs
-          tar -vv --extract --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst --directory docs
+          tar -vv --extract --file docs-${{ github.sha }}-${{ inputs.os-name }}.tar.zst --directory docs
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages
+          branch: docs
           folder: docs
