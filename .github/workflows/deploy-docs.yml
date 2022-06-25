@@ -12,10 +12,6 @@ on:
         description: "The OS to run the workflow on."
         required: true
         type: string
-    secrets:
-      REPO_AUTH_TOKEN:
-        description: "The GitHub repo auth token."
-        required: true
 
 jobs:
   deploy-docs:
@@ -27,16 +23,12 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+      - name: Extract artifact
+        run: tar --extract gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
       - name: List directory
         run: ls -laR
-      - name: Upload archive
-        uses: actions/upload-artifact@v3
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
-          path: gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
-        # with:
-        #   emit_telemetry: false
-        #   token: ${{ secrets.REPO_AUTH_TOKEN }}
+          branch: gh-pages
+          folder: gh-pages-${{ github.sha }}-${{ inputs.os-name }}

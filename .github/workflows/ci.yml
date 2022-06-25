@@ -34,14 +34,14 @@ jobs:
       os-name: ubuntu-22.04
     secrets: inherit
 
-  # deploy-docs:
-  #   name: deploy-docs
-  #   needs:
-  #     # - macos-11
-  #     # - macos-12
-  #     - ubuntu-20_04
-  #     - ubuntu-22_04
-  #   uses: ./.github/workflows/deploy-docs.yml
-  #   with:
-  #     os-name: ubuntu-22.04
-  #   secrets: inherit
+  deploy-docs:
+    name: deploy-docs
+    needs:
+      # - macos-11
+      # - macos-12
+      # - ubuntu-20_04
+      - ubuntu-22_04
+    uses: ./.github/workflows/deploy-docs.yml
+    with:
+      os-name: ubuntu-22.04
+    secrets: inherit

@@ -7,6 +7,11 @@ on:
         description: "The OS to run the workflow on."
         required: true
         type: string
+      nightly:
+        description: "Whether to run the nightly build."
+        required: false
+        type: boolean
+        default: false
     secrets:
       REPO_AUTH_TOKEN:
         description: "The GitHub repo auth token."
@@ -85,9 +90,14 @@ jobs:
         run: $NIX_BUILD_CMD .#docs
       - name: Cache docs
         run: $NIX_CACHE_CMD .#docs
-
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        
+      # Upload documentation
+      - name: Create archive
+        run: tar -vv --dereference --hard-dereference --auto-compress --create --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst  --directory result .
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
         with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: result # The folder the action should deploy.
+          name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
+          path: gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
+
+
