@@ -21,9 +21,11 @@ jobs:
         with:
           name: gh-pages-${{ github.sha }}-${{ inputs.os-name }}
       - name: Extract artifact
-        run: tar -vv --extract --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst && rm gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
+        run: |
+          mkdir docs
+          tar -vv --extract --file gh-pages-${{ github.sha }}-${{ inputs.os-name }}.tar.zst --directory docs
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: .
+          folder: docs
