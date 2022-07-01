@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: "0 0 * * *" # The star is special in YAML and must be quoted.
 
 jobs:
   macos-11:
