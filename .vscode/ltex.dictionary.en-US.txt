@@ -1,0 +1,7 @@
+Unicode
+Functional
+Functionals
+Bool
+eval
+modus
+ponens

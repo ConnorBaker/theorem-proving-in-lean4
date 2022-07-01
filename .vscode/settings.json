@@ -1,0 +1,16 @@
+{
+    "lean4.toolchainPath": "/nix/store/q8mjbbx8cbci4mx50m1q5z2lxfm7371i-lean",
+    "ltex.enabled": [
+        "bibtex",
+        "context",
+        "context.tex",
+        "html",
+        "latex",
+        "markdown",
+        "org",
+        "restructuredtext",
+        "rsweave",
+        "lean"
+    ],
+    "ltex.checkFrequency": "save"
+}
