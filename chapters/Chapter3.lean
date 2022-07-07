@@ -1,4 +1,4 @@
-/-! # Propositions and Proofs
+/-! # Chapter 3: Propositions and Proofs
 
 By now, you have seen some ways of defining objects and functions in
 Lean. In this chapter, we will begin to explain how to write

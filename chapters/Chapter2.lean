@@ -1,4 +1,4 @@
-/-! # Dependent Type Theory
+/-! # Chapter 2: Dependent Type Theory
 
 Lean is based on a version of dependent type theory known as the Calculus of 
 Constructions, with a countable hierarchy of non-cumulative universes and 
