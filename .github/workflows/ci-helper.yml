@@ -70,8 +70,14 @@ jobs:
       # Build
       - name: Build development environment
         run: $NIX_DEV_CMD
-      - name: Cache development environment outputs
-        run: $NIX_CACHE_CMD
+      - name: Cache development environment outputs in the background
+        run: $NIX_CACHE_CMD &> ./cache-dev.txt &
+      - name: Cache development environment derivation in the background
+        run: $NIX_CACHE_CMD --derivation &> ./cache-dev-derivation.txt &
+
+      # Wait for caching to finish
+      - name: Wait for caching to finish
+        run: wait || cat ./cache-dev.txt ./cache-dev-derivation.txt
 
   build:
     needs: develop
@@ -101,16 +107,20 @@ jobs:
         if: inputs.nightly
         run: cat flake.lock
 
-      # Build
+      # Build and cache
       - name: Build outputs
         run: $NIX_BUILD_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown}
-      - name: Cache outputs
-        run: $NIX_CACHE_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown}
+      - name: Cache outputs in the background
+        run: $NIX_CACHE_CMD .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown} &> ./cache-outputs.txt &
+      - name: Cache output derivations in the background
+        run: $NIX_CACHE_CMD --derivation .#{leanInk,alectryon,lean-mdbook,generated-lean-markdown} &> ./cache-outputs-derivation.txt &
       - name: Build docs
         run: $NIX_BUILD_CMD .#docs
-      - name: Cache docs
-        run: $NIX_CACHE_CMD .#docs
-        
+      - name: Cache docs in the background
+        run: $NIX_CACHE_CMD .#docs &> ./cache-docs.txt &
+      - name: Cache docs derivations in the background
+        run: $NIX_CACHE_CMD --derivation .#docs &> ./cache-docs-derivation.txt &
+
       # Upload documentation
       - name: Create archive
         run: tar -vv --auto-compress --create --file docs-${{ github.sha }}-${{ inputs.os-name }}.tar.zst  --directory result .
@@ -120,4 +130,6 @@ jobs:
           name: docs-${{ github.sha }}-${{ inputs.os-name }}
           path: docs-${{ github.sha }}-${{ inputs.os-name }}.tar.zst
 
-
+      # Wait for caching to finish
+      - name: Wait for caching to finish
+        run: wait || cat ./cache-outputs.txt ./cache-outputs-derivation.txt ./cache-docs.txt ./cache-docs-derivation.txt

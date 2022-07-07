@@ -19,11 +19,11 @@
     },
     "flake-utils": {
       "locked": {
-        "lastModified": 1653893745,
-        "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
+        "lastModified": 1656928814,
+        "narHash": "sha256-RIFfgBuKz6Hp89yRr7+NR5tzIAbn52h8vT6vXkYjZoM=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "1ed9fb1935d260de5fe1c2f7ee0ebaae17ed2fa1",
+        "rev": "7e2a3b3dfd9af950a856d66b0a7d01e3c18aa249",
         "type": "github"
       },
       "original": {
@@ -56,11 +56,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1655988786,
-        "narHash": "sha256-XnbxT/DIw0rLsgJM7tR+IHVhk+nrOquFgCdiUcPIrls=",
+        "lastModified": 1657207110,
+        "narHash": "sha256-cTAg29vcYqHg2hIWgeou1LzpF4nS3Q8GFGlEhYchAXo=",
         "owner": "leanprover",
         "repo": "lean4",
-        "rev": "939f8d9f162f23605aca33cf439e03114f019754",
+        "rev": "dd924e5270fbe3b1c0ef739fd0601a7c3fc7745d",
         "type": "github"
       },
       "original": {
@@ -103,11 +103,11 @@
     "leanInk-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1655643380,
-        "narHash": "sha256-sVc2LNQ0/D2DsuRGWfsP/sVsi//jTsoWMVwTeYwS/wQ=",
+        "lastModified": 1656863690,
+        "narHash": "sha256-9tmynTTeJGhYZaltS4xhSJgLTpe7Ta1ofV6U1SA/5V4=",
         "owner": "leanprover",
         "repo": "LeanInk",
-        "rev": "0a160d91458c1873937449a7c78d25b34b8686df",
+        "rev": "4b5e606ea8cc54c2447ce48706f8ec1d133d19e9",
         "type": "github"
       },
       "original": {
